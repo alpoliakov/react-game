@@ -1,0 +1,14 @@
+query Setting($settingId: ObjectId!) {
+  setting(settingId: $settingId) {
+    _id
+    sound
+    money
+    rate
+    complexity
+    user {
+      _id
+      username
+      email
+    }
+  }
+}

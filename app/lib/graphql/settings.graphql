@@ -1,0 +1,9 @@
+query Settings {
+  settings {
+    _id
+    sound
+    money
+    rate
+    complexity
+  }
+}

@@ -1,0 +1,10 @@
+mutation SignUp($username:String!, $email:String!, $password:String!) {
+  register(input:{username:$username, email:$email, password:$password}) {
+    user {
+      _id
+      email
+      username
+    }
+    token
+  }
+}

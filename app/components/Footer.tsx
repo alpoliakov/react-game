@@ -4,7 +4,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <div className="p-8 bg-gray-200 dark:bg-gray-800 flex justify-around items-center font-bold text-xl">
+    <div className="p-5 bg-gray-200 dark:bg-gray-800 flex justify-around items-center font-bold text-xl">
       <Link href="https://rs.school/js/">
         <a className="shadow__item hover__item" target="_blank">
           <Image src="/rs_school_logo.svg" alt="Logo" width={150} height={30} />

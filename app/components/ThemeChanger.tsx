@@ -2,75 +2,38 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
-const Dropdown = () => {
-  const [show, setShow] = useState(false);
-
-  return (
-    <div className="mr-10 relative">
-      <button
-        id="user-menu"
-        className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
-        aria-label="User menu"
-        aria-expanded="true"
-        aria-haspopup="true">
-        <img
-          className="h-8 w-8 rounded-full"
-          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-          alt="logo"
-        />
-      </button>
-      <div
-        id="user-menu-dropdown"
-        className="menu-hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg">
-        <div
-          className="py-1 rounded-md bg-white shadow-xs"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="user-menu">
-          <Link href="/profile">
-            <a
-              className="cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem">
-              Your Profile
-            </a>
-          </Link>
-          <Link href="/settings">
-            <a
-              className="cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem">
-              Settings
-            </a>
-          </Link>
-          <Link href="/">
-            <a
-              className="cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
-              role="menuitem">
-              Sign out
-            </a>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { useAuth } from '../lib/useAuth';
+import Dropdown from './Dropdown';
 
 const ThemeChanger = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
-  const [auth, setAuth] = useState(true);
+  const { message, error, user } = useAuth();
 
-  // When mounted on client, now we can show the UI
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    if (message) {
+      toast.success(message, { duration: 6000 });
+    }
+  }, [message]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error, { duration: 6000 });
+    }
+  }, [error]);
 
   if (!mounted) return null;
 
   return (
-    <div className="sticky top-0 z-10 p-3 md:p-5 bg-gray-200 dark:bg-gray-800 items-center font-bold text-xl grid md:grid-cols-3 sm:grid-cols-1 justify-items-center md:justify-items-stretch gap-y-5 md:gap-0">
+    <div className="sticky top-0 z-10 p-2 md:pr-5 md:pl-5 bg-gray-200 dark:bg-gray-800 items-center font-bold text-xl grid md:grid-cols-3 sm:grid-cols-1 justify-items-center md:justify-items-stretch gap-y-5 md:gap-0">
       <div>
-        <Link href="rules">
+        <Link href="/rules">
           <a>
-            <h1>Rules</h1>
+            <h1 className="text-gray-600 dark:text-gray-100 uppercase shadow__item">Rules</h1>
           </a>
         </Link>
       </div>
@@ -80,7 +43,8 @@ const ThemeChanger = () => {
         </span>
       </h1>
       <div className="flex justify-end order-3">
-        {auth && <Dropdown />}
+        {user && <span className="pt-1 mr-5 shadow__item">{user.username}</span>}
+        <Dropdown />
         <button onClick={() => setTheme('light')} className="hover:text-orange-600">
           <svg
             className="w-8 h-8"
