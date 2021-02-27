@@ -15,7 +15,7 @@ export default function SignUp() {
   };
 
   return (
-    <div style={{ minHeight: '79vh' }} className="flex justify-center items-center">
+    <div style={{ minHeight: '83vh' }} className="flex justify-center items-center">
       <Head>
         <title>Sign Up Page</title>
       </Head>

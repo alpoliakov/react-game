@@ -12,7 +12,7 @@ export class Setting {
 
   @Field()
   @Property({ required: true })
-  sound: string;
+  sound: boolean;
 
   @Field()
   @Property({ required: true })
@@ -24,7 +24,7 @@ export class Setting {
 
   @Field()
   @Property({ required: true })
-  complexity: string;
+  complexity: boolean;
 
   @Field(() => User)
   @Property({ ref: User, required: true })

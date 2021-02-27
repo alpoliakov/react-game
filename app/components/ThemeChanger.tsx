@@ -29,7 +29,7 @@ const ThemeChanger = () => {
   if (!mounted) return null;
 
   return (
-    <div className="sticky top-0 z-10 p-2 md:pr-5 md:pl-5 bg-gray-200 dark:bg-gray-800 items-center font-bold text-xl grid md:grid-cols-3 sm:grid-cols-1 justify-items-center md:justify-items-stretch gap-y-5 md:gap-0">
+    <div className="sticky top-0 z-10 p-2 pr-5 pl-5 bg-gray-200 dark:bg-gray-800 items-center font-bold text-xl grid md:grid-cols-3 sm:grid-cols-1 justify-items-center md:justify-items-stretch gap-y-5 md:gap-0">
       <div>
         <Link href="/rules">
           <a>
@@ -43,7 +43,11 @@ const ThemeChanger = () => {
         </span>
       </h1>
       <div className="flex justify-end order-3">
-        {user && <span className="pt-1 mr-5 shadow__item">{user.username}</span>}
+        {user && (
+          <span className="pt-1 mr-5 animate-pulse shadow__item text-orange-600 dark:text-pink-500">
+            {user.username}
+          </span>
+        )}
         <Dropdown />
         <button onClick={() => setTheme('light')} className="hover:text-orange-600">
           <svg

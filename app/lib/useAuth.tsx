@@ -47,7 +47,8 @@ function useProvideAuth() {
         sessionStorage.setItem('token', data.login.token);
         client.resetStore().then(() => {
           setMessage('Success login!');
-          router.push('/');
+          console.log(data);
+          router.push(`/game/${data.login.user._id}`);
         });
       } else {
         setError('Invalid Login');
@@ -64,7 +65,7 @@ function useProvideAuth() {
         sessionStorage.setItem('token', data.register.token);
         client.resetStore().then(() => {
           setMessage('Success login!');
-          router.push('/');
+          router.push(`/game/${data.register.user._id}`);
         });
       } else {
         setError('Invalid Login');

@@ -7,7 +7,7 @@ import React from 'react';
 import { useAuth } from '../../lib/useAuth';
 
 export default function SignIn() {
-  const { error, message, signIn } = useAuth();
+  const { signIn } = useAuth();
 
   const onFinish = async (values: any) => {
     const { email, password } = values;
@@ -15,7 +15,7 @@ export default function SignIn() {
   };
 
   return (
-    <div style={{ minHeight: '82vh' }} className="flex justify-center items-center">
+    <div style={{ minHeight: '83vh' }} className="flex justify-center items-center">
       <Head>
         <title>Sign In</title>
       </Head>

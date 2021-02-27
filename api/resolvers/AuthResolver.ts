@@ -31,10 +31,10 @@ export class AuthResolver {
     const token = jwt.sign(payload, process.env.SESSION_SECRET || 'PWzpwOxdpwG8yPae');
 
     const defaultSetting = await new SettingModel({
-      sound: 'on',
+      sound: true,
       money: 500,
       rate: 50,
-      complexity: 'usual',
+      complexity: false,
       user: user.id,
     });
 

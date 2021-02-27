@@ -1,0 +1,127 @@
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Form, InputNumber, Switch } from 'antd';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+
+import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
+import { Setting } from '../lib/graphql/settings.graphql';
+import { useAuth } from '../lib/useAuth';
+
+interface Props {
+  settings: Setting[];
+}
+
+export default function SettingForm(props: Props) {
+  const { settings } = props;
+  const [editSetting] = useEditSettingMutation();
+  const [form] = Form.useForm();
+  const router = useRouter();
+
+  const { user } = useAuth();
+
+  const [state, setState] = useState({} as any);
+
+  useEffect(() => {
+    if (settings) {
+      settings.map((setting) => {
+        const { _id, sound, money, rate, complexity } = setting;
+        setState({
+          _id,
+          sound,
+          money,
+          rate,
+          complexity,
+        });
+      });
+    }
+  }, [settings]);
+
+  const { _id, sound, money, rate, complexity } = state;
+
+  useEffect(() => {
+    form.setFieldsValue({
+      money,
+      rate,
+      sound,
+      complexity,
+    });
+  }, [state]);
+
+  const onFinish = async () => {
+    try {
+      const { data } = await editSetting({
+        variables: { input: { id: _id, sound, money, rate, complexity } },
+      });
+      if (data.editSetting._id) {
+        router.push('/').then(() => {
+          toast.success('Changes saved!');
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+    }
+  };
+
+  return (
+    <Card style={{ width: 400 }} hoverable className="items-center self-center">
+      <h1 className="block text-base text-center text-orange-600 dark:text-pink-500 font-semibold tracking-wide uppercase">
+        Game settings
+      </h1>
+      <Form
+        initialValues={{ remember: true }}
+        layout="vertical"
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        scrollToFirstError>
+        <Form.Item>
+          <div style={{ marginBottom: 0, display: 'flex', justifyContent: 'space-between' }}>
+            <Form.Item
+              style={{ display: 'inline-block' }}
+              name="money"
+              label="Credit"
+              rules={[{ required: true, type: 'number', min: 100, max: 5000 }]}>
+              <InputNumber name="money" onChange={(data) => setState({ ...state, money: data })} />
+            </Form.Item>
+            <Form.Item
+              style={{ display: 'inline-block' }}
+              name="rate"
+              label="Rate"
+              rules={[{ required: true, type: 'number', min: 10, max: 1000 }]}>
+              <InputNumber name="money" onChange={(data) => setState({ ...state, rate: data })} />
+            </Form.Item>
+          </div>
+          <div style={{ marginBottom: 0, display: 'flex', justifyContent: 'space-between' }}>
+            <Form.Item name="sound" label="Sound">
+              <Switch
+                checked={sound}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onChange={(data) => setState({ ...state, sound: data })}
+              />
+            </Form.Item>
+            <Form.Item name="complexity" label="Complexity">
+              <Switch
+                checked={complexity}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onChange={(data) => setState({ ...state, complexity: data })}
+              />
+            </Form.Item>
+          </div>
+          <Button type="primary" htmlType="submit" block>
+            Save changes
+          </Button>
+          <Divider />
+          Or{' '}
+          <Link href={`/game/${user._id}`}>
+            <a>Return!</a>
+          </Link>
+        </Form.Item>
+      </Form>
+    </Card>
+  );
+}

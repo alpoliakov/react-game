@@ -9,7 +9,7 @@ export class SettingInput implements Partial<Setting> {
   id?: ObjectId;
 
   @Field()
-  sound: string;
+  sound: boolean;
 
   @Field()
   money: number;
@@ -18,5 +18,5 @@ export class SettingInput implements Partial<Setting> {
   rate: number;
 
   @Field()
-  complexity: string;
+  complexity: boolean;
 }

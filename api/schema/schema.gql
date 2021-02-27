@@ -29,19 +29,19 @@ type Query {
 
 type Setting {
   _id: ObjectId!
-  complexity: String!
+  complexity: Boolean!
   money: Float!
   rate: Float!
-  sound: String!
+  sound: Boolean!
   user: User!
 }
 
 input SettingInput {
-  complexity: String!
+  complexity: Boolean!
   id: ObjectId
   money: Float!
   rate: Float!
-  sound: String!
+  sound: Boolean!
 }
 
 type User {

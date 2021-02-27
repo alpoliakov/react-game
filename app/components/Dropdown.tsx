@@ -18,7 +18,7 @@ const Dropdown = () => {
     <div className="mr-10 relative">
       <button
         id="user-menu"
-        className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white transition duration-150 ease-in-out"
+        className="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-white hover:transform scale-125 transition duration-150 ease-in-out"
         aria-label="User menu"
         aria-expanded="true"
         aria-haspopup="true">
@@ -32,7 +32,7 @@ const Dropdown = () => {
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu">
-          <Link href={user ? '/profile' : '/auth/signin'}>
+          <Link href={user ? `/user/${user._id}` : '/auth/signin'}>
             <a
               className="cursor-pointer block px-4 py-2 text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
               role="menuitem">
