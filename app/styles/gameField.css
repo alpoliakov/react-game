@@ -1,0 +1,40 @@
+.container {
+  display: grid;
+  grid:
+    'title'
+    'user'
+    'dealer';
+  gap: 20px;
+}
+
+.title {
+  grid-area: title;
+}
+
+.user {
+  grid-area: user;
+}
+
+.dealer {
+  grid-area: dealer;
+}
+
+.card,
+.card-red {
+  height: 150px;
+  width: 100px;
+  background-color: #bfbfbf;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.card-red {
+  color: red;
+}
+
+.cards {
+  margin: 0 auto;
+}

@@ -1,5 +1,5 @@
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Form, InputNumber, Switch } from 'antd';
+import { CheckOutlined, CloseOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
+import { Button, Card, Divider, Form, InputNumber, Switch, Tooltip } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -55,9 +55,7 @@ export default function SettingForm(props: Props) {
         variables: { input: { id: _id, sound, money, rate, complexity } },
       });
       if (data.editSetting._id) {
-        router.push('/').then(() => {
-          toast.success('Changes saved!');
-        });
+        toast.success('Changes saved!');
       }
     } catch (err) {
       console.log(err);
@@ -66,7 +64,20 @@ export default function SettingForm(props: Props) {
   };
 
   return (
-    <Card style={{ width: 400 }} hoverable className="items-center self-center">
+    <Card
+      style={{ width: 400 }}
+      hoverable
+      className="items-center self-center dark:bg-gray-900"
+      actions={[
+        <Link key="back" href="/">
+          <Tooltip title="To start page">
+            <HomeOutlined style={{ fontSize: '20px' }} />
+          </Tooltip>
+        </Link>,
+        <Tooltip key="back" title="Return">
+          <RollbackOutlined style={{ fontSize: '20px' }} onClick={() => router.back()} />
+        </Tooltip>,
+      ]}>
       <h1 className="block text-base text-center text-orange-600 dark:text-pink-500 font-semibold tracking-wide uppercase">
         Game settings
       </h1>
@@ -82,20 +93,22 @@ export default function SettingForm(props: Props) {
             <Form.Item
               style={{ display: 'inline-block' }}
               name="money"
-              label="Credit"
+              label={<span className="text-gray-900 dark:text-gray-100">Wallet</span>}
               rules={[{ required: true, type: 'number', min: 100, max: 5000 }]}>
               <InputNumber name="money" onChange={(data) => setState({ ...state, money: data })} />
             </Form.Item>
             <Form.Item
               style={{ display: 'inline-block' }}
               name="rate"
-              label="Rate"
+              label={<span className="text-gray-900 dark:text-gray-100">Bet</span>}
               rules={[{ required: true, type: 'number', min: 10, max: 1000 }]}>
-              <InputNumber name="money" onChange={(data) => setState({ ...state, rate: data })} />
+              <InputNumber name="rate" onChange={(data) => setState({ ...state, rate: data })} />
             </Form.Item>
           </div>
           <div style={{ marginBottom: 0, display: 'flex', justifyContent: 'space-between' }}>
-            <Form.Item name="sound" label="Sound">
+            <Form.Item
+              name="sound"
+              label={<span className="text-gray-900 dark:text-gray-100">Sound</span>}>
               <Switch
                 checked={sound}
                 checkedChildren={<CheckOutlined />}
@@ -103,7 +116,9 @@ export default function SettingForm(props: Props) {
                 onChange={(data) => setState({ ...state, sound: data })}
               />
             </Form.Item>
-            <Form.Item name="complexity" label="Complexity">
+            <Form.Item
+              name="complexity"
+              label={<span className="text-gray-900 dark:text-gray-100">Complexity</span>}>
               <Switch
                 checked={complexity}
                 checkedChildren={<CheckOutlined />}
@@ -115,11 +130,6 @@ export default function SettingForm(props: Props) {
           <Button type="primary" htmlType="submit" block>
             Save changes
           </Button>
-          <Divider />
-          Or{' '}
-          <Link href={`/game/${user._id}`}>
-            <a>Return!</a>
-          </Link>
         </Form.Item>
       </Form>
     </Card>

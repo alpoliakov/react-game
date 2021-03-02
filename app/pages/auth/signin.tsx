@@ -19,7 +19,7 @@ export default function SignIn() {
       <Head>
         <title>Sign In</title>
       </Head>
-      <Card style={{ width: 400 }} hoverable className="items-center self-center">
+      <Card style={{ width: 400 }} hoverable className="items-center self-center dark:bg-gray-900">
         <Form
           name="normal_login"
           className="login-form"
@@ -27,7 +27,7 @@ export default function SignIn() {
           layout="vertical"
           onFinish={onFinish}>
           <Form.Item
-            label="Email"
+            label={<span className="text-gray-900 dark:text-gray-100">E-mail</span>}
             name="email"
             rules={[
               {
@@ -47,7 +47,7 @@ export default function SignIn() {
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label={<span className="text-gray-900 dark:text-gray-100">Password</span>}
             name="password"
             rules={[{ required: true, message: 'Please input your Password!' }]}>
             <Input.Password
@@ -59,7 +59,7 @@ export default function SignIn() {
           </Form.Item>
           <Form.Item>
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox className="text-gray-900 dark:text-gray-100">Remember me</Checkbox>
             </Form.Item>
           </Form.Item>
 
@@ -72,10 +72,12 @@ export default function SignIn() {
               Log in
             </Button>
             <Divider />
-            Or{' '}
-            <Link href="/auth/signup">
-              <a>register now!</a>
-            </Link>
+            <span className="text-gray-900 dark:text-gray-100">
+              Or{' '}
+              <Link href="/auth/signup">
+                <a>register now!</a>
+              </Link>
+            </span>
           </Form.Item>
         </Form>
       </Card>

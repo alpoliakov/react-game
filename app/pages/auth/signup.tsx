@@ -19,7 +19,7 @@ export default function SignUp() {
       <Head>
         <title>Sign Up Page</title>
       </Head>
-      <Card style={{ width: 400 }} hoverable className="items-center self-center">
+      <Card style={{ width: 400 }} hoverable className="items-center self-center dark:bg-gray-900">
         <Form
           initialValues={{ remember: true }}
           layout="vertical"
@@ -30,7 +30,7 @@ export default function SignUp() {
           <Form.Item
             name="username"
             label={
-              <span>
+              <span className="text-gray-900 dark:text-gray-100">
                 Name&nbsp;
                 <Tooltip title="What do you want others to call you?">
                   <QuestionCircleOutlined />
@@ -43,7 +43,7 @@ export default function SignUp() {
 
           <Form.Item
             name="email"
-            label="E-mail"
+            label={<span className="text-gray-900 dark:text-gray-100">E-mail</span>}
             rules={[
               {
                 type: 'email',
@@ -59,7 +59,7 @@ export default function SignUp() {
 
           <Form.Item
             name="password"
-            label="Password"
+            label={<span className="text-gray-900 dark:text-gray-100">Password</span>}
             rules={[
               {
                 required: true,
@@ -80,7 +80,7 @@ export default function SignUp() {
                   value ? Promise.resolve() : Promise.reject('Should accept agreement'),
               },
             ]}>
-            <Checkbox>
+            <Checkbox className="text-gray-900 dark:text-gray-100">
               I have read the{' '}
               <Link href="/rules">
                 <a>agreement</a>
@@ -93,10 +93,12 @@ export default function SignUp() {
               Register
             </Button>
             <Divider />
-            Or{' '}
-            <Link href="/auth/signin">
-              <a>Login now!</a>
-            </Link>
+            <span className="text-gray-900 dark:text-gray-100">
+              Or{' '}
+              <Link href="/auth/signin">
+                <a>Login now!</a>
+              </Link>
+            </span>
           </Form.Item>
         </Form>
       </Card>

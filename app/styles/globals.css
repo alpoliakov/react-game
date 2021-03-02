@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'gameField.css';
 
 :root {
   --color-bg: #eef0f1;

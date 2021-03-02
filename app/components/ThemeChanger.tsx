@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useAuth } from '../lib/useAuth';
+import BreadcrumbItem from './Breadcrumd';
 import Dropdown from './Dropdown';
 
 const ThemeChanger = () => {
@@ -30,13 +31,7 @@ const ThemeChanger = () => {
 
   return (
     <div className="sticky top-0 z-10 p-2 pr-5 pl-5 bg-gray-200 dark:bg-gray-800 items-center font-bold text-xl grid md:grid-cols-3 sm:grid-cols-1 justify-items-center md:justify-items-stretch gap-y-5 md:gap-0">
-      <div>
-        <Link href="/rules">
-          <a>
-            <h1 className="text-gray-600 dark:text-gray-100 uppercase shadow__item">Rules</h1>
-          </a>
-        </Link>
-      </div>
+      <BreadcrumbItem user={user} />
       <h1 className="shadow__item md:order-2 order-first">
         <span className="mt-2 block text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl uppercase">
           Blackjack
