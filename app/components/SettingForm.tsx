@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Form, InputNumber, Switch, Tooltip } from 'antd';
+import { Button, Card, Divider, Form, InputNumber, Slider, Switch, Tooltip } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -62,6 +62,14 @@ export default function SettingForm(props: Props) {
       toast.error(err.message);
     }
   };
+
+  function onChangeValue(value) {
+    console.log('onChange: ', value);
+  }
+
+  function onAfterChangeValue(value) {
+    console.log('onAfterChange: ', value);
+  }
 
   return (
     <Card
@@ -127,6 +135,16 @@ export default function SettingForm(props: Props) {
               />
             </Form.Item>
           </div>
+          <Form.Item
+            name="volume"
+            label={<span className="text-gray-900 dark:text-gray-100">Volume</span>}>
+            <Slider
+              defaultValue={30}
+              disabled={!sound}
+              onChange={onChangeValue}
+              onAfterChange={onAfterChangeValue}
+            />
+          </Form.Item>
           <Button type="primary" htmlType="submit" block>
             Save changes
           </Button>

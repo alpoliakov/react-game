@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -10,14 +10,46 @@ import Dropdown from './Dropdown';
 
 const ThemeChanger = () => {
   const [mounted, setMounted] = useState(false);
+
   const { theme, setTheme } = useTheme();
-  const { message, error, user } = useAuth();
+  const { message, error, user, signOut } = useAuth();
+  const router = useRouter();
+
+  function hotKeys(event) {
+    const { key } = event;
+
+    if (!user) return;
+
+    if (key.toLowerCase() === 'h' && user) {
+      router.push('/');
+      console.log('Hello');
+    }
+
+    if (key.toLowerCase() === 'r' && user) {
+      router.push('/rules');
+    }
+
+    if (key.toLowerCase() === 'd' && user) {
+      setTheme('dark');
+    }
+
+    if (key.toLowerCase() === 'l' && user) {
+      setTheme('light');
+    }
+
+    if (key.toLowerCase() === 'e' && user) {
+      signOut();
+    }
+  }
 
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (message) {
       toast.success(message, { duration: 6000 });
+
+      const { body } = document;
+      body.addEventListener('keydown', hotKeys);
     }
   }, [message]);
 

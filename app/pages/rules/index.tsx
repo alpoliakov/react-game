@@ -1,6 +1,18 @@
+import { motion } from 'framer-motion';
 import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
+
+const easing = [0.175, 0.85, 0.42, 0.96];
+
+const textVariants = {
+  exit: { y: 100, opacity: 0, transition: { duration: 0.5, ease: easing } },
+  enter: {
+    y: 0,
+    opacity: 1,
+    transition: { delay: 0.1, duration: 0.5, ease: easing },
+  },
+};
 
 export default function Rules() {
   return (
@@ -9,8 +21,12 @@ export default function Rules() {
         <title>Rules</title>
       </Head>
       <div className="relative py-16">
-        <div className="relative px-4 sm:px-6 lg:px-8">
-          <div className="text-lg max-w-prose mx-auto">
+        <motion.div
+          initial="exit"
+          animate="enter"
+          exit="exit"
+          className="relative px-4 sm:px-6 lg:px-8">
+          <motion.div variants={textVariants} className="text-lg max-w-prose mx-auto">
             <h1>
               <span className="block text-base text-center text-orange-600 dark:text-pink-500 font-semibold tracking-wide uppercase">
                 Introducing
@@ -24,8 +40,10 @@ export default function Rules() {
               nibh dui, diam eget aliquam. Quisque id at vitae feugiat egestas ac. Diam nulla orci
               at in viverra scelerisque eget. Eleifend egestas fringilla sapien.
             </p>
-          </div>
-          <div className="mt-6 prose prose-orange dark:prose-dark dark:prose-pink prose-lg mx-auto">
+          </motion.div>
+          <motion.div
+            variants={textVariants}
+            className="mt-6 prose prose-orange dark:prose-dark dark:prose-pink prose-lg mx-auto">
             <p>
               Faucibus commodo massa rhoncus, volutpat. <strong>Dignissim</strong> sed{' '}
               <strong>eget risus enim</strong>. Mattis mauris semper sed amet vitae sed turpis id.
@@ -55,8 +73,8 @@ export default function Rules() {
               semper sed amet vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus
               viverra tellus varius sit neque erat velit.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
     </div>
   );

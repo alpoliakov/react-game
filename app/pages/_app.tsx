@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import 'antd/dist/antd.css';
 
 import { ApolloProvider } from '@apollo/client';
+import { AnimatePresence } from 'framer-motion';
 import { useApollo } from 'lib/apollo';
 import { AuthProvider } from 'lib/useAuth';
 import { ThemeProvider } from 'next-themes';
@@ -11,7 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import Footer from '../components/Footer';
 import ThemeChanger from '../components/ThemeChanger';
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps, router }) {
   const apolloClient = useApollo(pageProps.initialApolloState);
 
   return (
@@ -19,7 +20,9 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider attribute="class">
         <AuthProvider>
           <ThemeChanger />
-          <Component {...pageProps} />
+          <AnimatePresence exitBeforeEnter>
+            <Component {...pageProps} key={router.route} />
+          </AnimatePresence>
           <Footer />
           <Toaster />
         </AuthProvider>

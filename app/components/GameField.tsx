@@ -1,11 +1,12 @@
-import { Button, Form, InputNumber, Modal } from 'antd';
+import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
+import { Button, Form, InputNumber, Modal, Tooltip } from 'antd';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
 
 import { initializeApollo } from '../lib/apollo';
 import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
-import { Setting, useSettingQuery } from '../lib/graphql/setting.graphql';
 import { SettingDocument } from '../lib/graphql/setting.graphql';
 import { useAuth } from '../lib/useAuth';
 import Card from './Card';
@@ -13,11 +14,18 @@ import Card from './Card';
 export default function GameField({ id }) {
   const [editSetting] = useEditSettingMutation();
   const { user } = useAuth();
+  const router = useRouter();
+
   const [form] = Form.useForm();
+
   const [playError] = useSound('../static/sounds/error.mp3');
+  const [playWin] = useSound('../static/sounds/winAudio.mp3');
+  const [playFail] = useSound('../static/sounds/fail.mp3');
+  const [playEqual] = useSound('../static/sounds/popping.mp3');
 
   const [visibleModal, setVisibleModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [full, setFull] = useState(false);
 
   const showModal = () => {
     setVisibleModal(true);
@@ -161,12 +169,33 @@ export default function GameField({ id }) {
     }
   };
 
+  const audioEffects = (type) => {
+    if (!sound) {
+      return;
+    }
+
+    switch (type) {
+      case 'error':
+        playError();
+        break;
+      case 'win':
+        playWin();
+        break;
+      case 'fail':
+        playFail();
+        break;
+      default:
+        playEqual();
+    }
+  };
+
   const setBet = () => {
     const newMoney = money - rate;
 
     if (+money <= 0) {
       setState({ ...state, message: 'Game over! Please start a new game.' });
       return showModal();
+      audioEffects('fail');
     } else if (money < rate) {
       return toast.error('Insufficient funds to bet that amount!');
     } else if (rate % 1 !== 0) {
@@ -185,7 +214,7 @@ export default function GameField({ id }) {
 
         if (player.count > 21) {
           setState({ ...state, player, gameOver: true, currentBet: false, message: 'BUST!' });
-          playError();
+          audioEffects('error');
         } else {
           setState({ ...state, deck: updatedDeck, player });
         }
@@ -194,6 +223,8 @@ export default function GameField({ id }) {
       }
     } else {
       setState({ ...state, message: 'Game over! Please start a new game.' });
+      showModal();
+      audioEffects('fail');
     }
   };
 
@@ -232,6 +263,7 @@ export default function GameField({ id }) {
           currentBet: false,
           message: 'Dealer bust! You win!',
         });
+        playWin();
       } else {
         const winner = getWinner(dealer, player);
         let wallet = state.money;
@@ -239,12 +271,15 @@ export default function GameField({ id }) {
 
         if (winner === 'dealer') {
           message = 'Dealer wins...';
+          audioEffects('error');
         } else if (winner === 'player') {
           wallet += state.rate * 2;
           message = 'You win!';
+          audioEffects('win');
         } else {
           wallet += state.rate;
           message = 'Push.';
+          audioEffects('push');
         }
 
         setState({
@@ -260,6 +295,7 @@ export default function GameField({ id }) {
     } else {
       setState({ ...state, message: 'Game over! Please start a new game.' });
       showModal();
+      audioEffects('fail');
     }
   };
 
@@ -279,7 +315,10 @@ export default function GameField({ id }) {
       });
     } else {
       setState({ ...state, message: 'Game over! You are broke! Please start a new game.' });
-      showModal();
+      setTimeout(() => {
+        showModal();
+      }, 800);
+      audioEffects('fail');
     }
   };
 
@@ -289,11 +328,14 @@ export default function GameField({ id }) {
 
   const handleCancel = () => {
     setVisibleModal(false);
+    router.push('/');
   };
 
   const handleOk = () => {
     const deck = generateDeck();
     const { updatedDeck, player, dealer } = dealCards(deck);
+
+    setVisibleModal(false);
 
     setState({
       ...state,
@@ -306,10 +348,9 @@ export default function GameField({ id }) {
       message: null,
     });
 
-    setVisibleModal(false);
     setTimeout(() => {
       toast.success('New game run!');
-    }, 1500);
+    }, 1000);
   };
 
   const ModalItem = () => {
@@ -333,20 +374,43 @@ export default function GameField({ id }) {
     );
   };
 
+  function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+      setFull(true);
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+        setFull(false);
+      }
+    }
+  }
+
   return (
     <div style={{ width: '100%', minHeight: '83vh' }} className="relative py-5">
       <ModalItem />
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="text-lg max-w-screen-xl mx-auto container">
+          <Tooltip title={full ? 'Full screen mode off' : 'Full screen mode on'} color="geekblue">
+            <button
+              className="absolute border-none outline-none focus:outline-none"
+              onClick={toggleFullScreen}>
+              {full ? (
+                <FullscreenExitOutlined style={{ fontSize: 28 }} />
+              ) : (
+                <FullscreenOutlined style={{ fontSize: 28 }} />
+              )}
+            </button>
+          </Tooltip>
           <div className="title">
             <span className="mt-2 mb-4 block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
               {`Wallet: $ ${money}`}
             </span>
-            <span className="mt-2 mb-4 block text-xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-              {message}
+            <span className="lowercase mt-2 mb-4 block text-xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-orange-600 dark:text-pink-500 sm:text-4xl">
+              {message ? message : 'Wait result...'}
             </span>
             {currentBet && (
-              <h2 className="text-center text-2xl text-orange-600 dark:text-pink-500">{`Your Bet: $ ${rate}`}</h2>
+              <h2 className="text-center mb-6 text-2xl text-orange-600 dark:text-pink-500">{`Your Bet: $ ${rate}`}</h2>
             )}
             {!currentBet && (
               <Form
