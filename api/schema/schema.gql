@@ -29,19 +29,27 @@ type Query {
 
 type Setting {
   _id: ObjectId!
+  balance: Float!
   complexity: Boolean!
+  games: Float!
   money: Float!
+  music: Boolean!
   rate: Float!
   sound: Boolean!
   user: User!
+  volume: Float!
 }
 
 input SettingInput {
+  balance: Float!
   complexity: Boolean!
+  games: Float!
   id: ObjectId
   money: Float!
+  music: Boolean!
   rate: Float!
   sound: Boolean!
+  volume: Float!
 }
 
 type User {

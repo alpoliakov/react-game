@@ -12,10 +12,22 @@ export class SettingInput implements Partial<Setting> {
   sound: boolean;
 
   @Field()
+  music: boolean;
+
+  @Field()
+  volume: number;
+
+  @Field()
   money: number;
 
   @Field()
   rate: number;
+
+  @Field()
+  balance?: number;
+
+  @Field()
+  games?: number;
 
   @Field()
   complexity: boolean;

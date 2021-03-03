@@ -1,5 +1,6 @@
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons';
 import { Button, Form, InputNumber, Modal, Tooltip } from 'antd';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -18,11 +19,6 @@ export default function GameField({ id }) {
 
   const [form] = Form.useForm();
 
-  const [playError] = useSound('../static/sounds/error.mp3');
-  const [playWin] = useSound('../static/sounds/winAudio.mp3');
-  const [playFail] = useSound('../static/sounds/fail.mp3');
-  const [playEqual] = useSound('../static/sounds/popping.mp3');
-
   const [visibleModal, setVisibleModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [full, setFull] = useState(false);
@@ -34,8 +30,12 @@ export default function GameField({ id }) {
   const [state, setState] = useState({
     _id: '',
     sound: null,
+    music: null,
+    volume: null,
     money: null,
     rate: null,
+    balance: null,
+    games: null,
     deck: null,
     dealer: null,
     player: null,
@@ -48,8 +48,12 @@ export default function GameField({ id }) {
   const {
     _id,
     sound,
+    music,
+    volume,
     money,
     rate,
+    balance,
+    games,
     complexity,
     currentBet,
     gameOver,
@@ -135,6 +139,7 @@ export default function GameField({ id }) {
       query: SettingDocument,
       variables: { settingId: id },
     });
+
     setState({
       ...data.setting,
       currentBet: false,
@@ -159,7 +164,9 @@ export default function GameField({ id }) {
   const onSubmit = async () => {
     try {
       const { data } = await editSetting({
-        variables: { input: { id: _id, sound, money, rate, complexity } },
+        variables: {
+          input: { id: _id, sound, music, volume, money, rate, balance, games, complexity },
+        },
       });
       if (data.editSetting._id) {
         console.log('Success');
@@ -168,6 +175,28 @@ export default function GameField({ id }) {
       console.log(err.message);
     }
   };
+
+  const [playError] = useSound('../static/sounds/error.mp3', {
+    volume: volume / 100,
+  });
+  const [playButton] = useSound('../static/sounds/button.mp3', {
+    volume: volume / 100,
+  });
+  const [playBet] = useSound('../static/sounds/bet.mp3', {
+    volume: volume / 100,
+  });
+  const [playWin] = useSound('../static/sounds/winAudio.mp3', {
+    volume: volume / 100,
+  });
+  const [playFail] = useSound('../static/sounds/fail.mp3', {
+    volume: volume / 100,
+  });
+  const [playEqual] = useSound('../static/sounds/popping.mp3', {
+    volume: volume / 100,
+  });
+  const [playMusic, { stop }] = useSound('../static/sounds/duck-souce.mp3', {
+    volume: volume / 100,
+  });
 
   const audioEffects = (type) => {
     if (!sound) {
@@ -194,8 +223,12 @@ export default function GameField({ id }) {
 
     if (+money <= 0) {
       setState({ ...state, message: 'Game over! Please start a new game.' });
+
+      setTimeout(() => {
+        audioEffects('fail');
+      }, 300);
+
       return showModal();
-      audioEffects('fail');
     } else if (money < rate) {
       return toast.error('Insufficient funds to bet that amount!');
     } else if (rate % 1 !== 0) {
@@ -203,18 +236,32 @@ export default function GameField({ id }) {
     }
 
     setState({ ...state, money: newMoney, currentBet: true });
+    playBet();
   };
 
   const hit = () => {
     if (!gameOver) {
       if (currentBet) {
+        if (sound) {
+          playButton();
+        }
+
         const { randomCard, updatedDeck } = getRandomCard(deck);
         player.cards.push(randomCard);
         player.count = getCount(player.cards);
 
         if (player.count > 21) {
-          setState({ ...state, player, gameOver: true, currentBet: false, message: 'BUST!' });
-          audioEffects('error');
+          setState({
+            ...state,
+            player,
+            balance: balance - rate,
+            gameOver: true,
+            currentBet: false,
+            message: 'BUST!',
+          });
+          setTimeout(() => {
+            audioEffects('error');
+          }, 600);
         } else {
           setState({ ...state, deck: updatedDeck, player });
         }
@@ -247,6 +294,10 @@ export default function GameField({ id }) {
       dealer.cards.push(randomCard.randomCard);
       dealer.count = getCount(dealer.cards);
 
+      if (sound) {
+        playButton();
+      }
+
       while (dealer.count < 17) {
         const draw = dealerDraw(dealer, deck);
         dealer = draw.dealer;
@@ -259,27 +310,39 @@ export default function GameField({ id }) {
           deck,
           dealer,
           money: state.money + state.rate * 2,
+          balance: state.balance + state.rate,
           gameOver: true,
           currentBet: false,
           message: 'Dealer bust! You win!',
         });
-        playWin();
+        setTimeout(() => {
+          audioEffects('win');
+        }, 600);
       } else {
         const winner = getWinner(dealer, player);
         let wallet = state.money;
+        let balance = state.balance;
         let message;
 
         if (winner === 'dealer') {
+          balance -= state.rate;
           message = 'Dealer wins...';
-          audioEffects('error');
+          setTimeout(() => {
+            audioEffects('error');
+          }, 600);
         } else if (winner === 'player') {
           wallet += state.rate * 2;
+          balance += state.rate;
           message = 'You win!';
-          audioEffects('win');
+          setTimeout(() => {
+            audioEffects('win');
+          }, 600);
         } else {
           wallet += state.rate;
           message = 'Push.';
-          audioEffects('push');
+          setTimeout(() => {
+            audioEffects('push');
+          }, 600);
         }
 
         setState({
@@ -287,6 +350,7 @@ export default function GameField({ id }) {
           deck,
           dealer,
           money: wallet,
+          balance: balance,
           gameOver: true,
           currentBet: false,
           message,
@@ -295,7 +359,9 @@ export default function GameField({ id }) {
     } else {
       setState({ ...state, message: 'Game over! Please start a new game.' });
       showModal();
-      audioEffects('fail');
+      setTimeout(() => {
+        audioEffects('fail');
+      }, 600);
     }
   };
 
@@ -313,18 +379,43 @@ export default function GameField({ id }) {
         gameOver: false,
         message: null,
       });
+
+      if (sound) {
+        playButton();
+      }
     } else {
       setState({ ...state, message: 'Game over! You are broke! Please start a new game.' });
       setTimeout(() => {
         showModal();
-      }, 800);
+      }, 1000);
       audioEffects('fail');
     }
   };
 
   useEffect(() => {
     onSubmit();
-  }, [money]);
+  }, [money, games, balance]);
+
+  useEffect(() => {
+    const setGamesCount = () => {
+      if (gameOver) {
+        setState({ ...state, games: games + 1 });
+      }
+      return;
+    };
+
+    setGamesCount();
+  }, [gameOver]);
+
+  useEffect(() => {
+    stop();
+    console.log('Stop');
+    if (music) {
+      playMusic();
+      console.log('Play');
+    }
+    return;
+  }, [music]);
 
   const handleCancel = () => {
     setVisibleModal(false);
@@ -386,14 +477,36 @@ export default function GameField({ id }) {
     }
   }
 
+  const postVariants = {
+    initial: { scale: 0.96, y: 30, opacity: 0 },
+    enter: {
+      scale: 1,
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96] },
+    },
+    exit: {
+      scale: 0.6,
+      y: 100,
+      opacity: 0,
+      transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
+    },
+  };
+
   return (
-    <div style={{ width: '100%', minHeight: '83vh' }} className="relative py-5">
+    <motion.div
+      initial="initial"
+      animate="enter"
+      exit="exit"
+      variants={postVariants}
+      style={{ width: '100%', minHeight: '83vh' }}
+      className="relative py-5">
       <ModalItem />
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="text-lg max-w-screen-xl mx-auto container">
           <Tooltip title={full ? 'Full screen mode off' : 'Full screen mode on'} color="geekblue">
             <button
-              className="absolute border-none outline-none focus:outline-none"
+              className="absolute border-none outline-none focus:outline-none transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
               onClick={toggleFullScreen}>
               {full ? (
                 <FullscreenExitOutlined style={{ fontSize: 28 }} />
@@ -406,8 +519,11 @@ export default function GameField({ id }) {
             <span className="mt-2 mb-4 block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
               {`Wallet: $ ${money}`}
             </span>
-            <span className="lowercase mt-2 mb-4 block text-xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-orange-600 dark:text-pink-500 sm:text-4xl">
-              {message ? message : 'Wait result...'}
+            <span
+              className={`${
+                message ? '' : 'animate-bounce'
+              } lowercase mt-2 mb-4 block text-xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-orange-600 dark:text-pink-500 sm:text-4xl`}>
+              {message ? message : 'waiting for the result...'}
             </span>
             {currentBet && (
               <h2 className="text-center mb-6 text-2xl text-orange-600 dark:text-pink-500">{`Your Bet: $ ${rate}`}</h2>
@@ -430,7 +546,13 @@ export default function GameField({ id }) {
                   />
                 </Form.Item>
                 <Form.Item>
-                  <Button disabled={gameOver} type="primary" htmlType="submit" className="ml-3">
+                  <Button
+                    disabled={gameOver}
+                    type="primary"
+                    htmlType="submit"
+                    className={`${
+                      gameOver ? '' : 'animate-pulse'
+                    } ml-3 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}>
                     Place Bet
                   </Button>
                 </Form.Item>
@@ -499,7 +621,7 @@ export default function GameField({ id }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

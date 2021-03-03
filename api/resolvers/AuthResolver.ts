@@ -32,8 +32,12 @@ export class AuthResolver {
 
     const defaultSetting = await new SettingModel({
       sound: true,
+      music: false,
+      volume: 100,
       money: 500,
       rate: 50,
+      balance: 0,
+      games: 0,
       complexity: false,
       user: user.id,
     });

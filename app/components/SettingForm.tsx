@@ -26,33 +26,42 @@ export default function SettingForm(props: Props) {
   useEffect(() => {
     if (settings) {
       settings.map((setting) => {
-        const { _id, sound, money, rate, complexity } = setting;
+        const { _id, sound, music, volume, money, rate, balance, games, complexity } = setting;
         setState({
           _id,
           sound,
+          music,
+          volume,
           money,
           rate,
+          balance,
+          games,
           complexity,
         });
       });
     }
   }, [settings]);
 
-  const { _id, sound, money, rate, complexity } = state;
+  const { _id, sound, music, volume, money, rate, balance, games, complexity } = state;
 
   useEffect(() => {
     form.setFieldsValue({
       money,
       rate,
       sound,
+      music,
       complexity,
+      volume,
     });
   }, [state]);
 
-  const onFinish = async () => {
+  const onFinish = async (values) => {
+    console.log(values);
     try {
       const { data } = await editSetting({
-        variables: { input: { id: _id, sound, money, rate, complexity } },
+        variables: {
+          input: { id: _id, sound, volume, music, money, rate, balance, games, complexity },
+        },
       });
       if (data.editSetting._id) {
         toast.success('Changes saved!');
@@ -65,6 +74,7 @@ export default function SettingForm(props: Props) {
 
   function onChangeValue(value) {
     console.log('onChange: ', value);
+    setState({ ...state, volume: value });
   }
 
   function onAfterChangeValue(value) {
@@ -125,6 +135,16 @@ export default function SettingForm(props: Props) {
               />
             </Form.Item>
             <Form.Item
+              name="music"
+              label={<span className="text-gray-900 dark:text-gray-100">Music</span>}>
+              <Switch
+                checked={music}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                onChange={(data) => setState({ ...state, music: data })}
+              />
+            </Form.Item>
+            <Form.Item
               name="complexity"
               label={<span className="text-gray-900 dark:text-gray-100">Complexity</span>}>
               <Switch
@@ -138,12 +158,7 @@ export default function SettingForm(props: Props) {
           <Form.Item
             name="volume"
             label={<span className="text-gray-900 dark:text-gray-100">Volume</span>}>
-            <Slider
-              defaultValue={30}
-              disabled={!sound}
-              onChange={onChangeValue}
-              onAfterChange={onAfterChangeValue}
-            />
+            <Slider disabled={!sound} onChange={onChangeValue} onAfterChange={onAfterChangeValue} />
           </Form.Item>
           <Button type="primary" htmlType="submit" block>
             Save changes

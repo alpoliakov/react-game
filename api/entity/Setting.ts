@@ -16,11 +16,27 @@ export class Setting {
 
   @Field()
   @Property({ required: true })
+  music: boolean;
+
+  @Field()
+  @Property({ required: true })
+  volume: number;
+
+  @Field()
+  @Property({ required: true })
   money: number;
 
   @Field()
   @Property({ required: true })
   rate: number;
+
+  @Field()
+  @Property()
+  balance: number;
+
+  @Field()
+  @Property()
+  games: number;
 
   @Field()
   @Property({ required: true })

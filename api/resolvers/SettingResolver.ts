@@ -36,10 +36,10 @@ export class SettingResolver {
     @Arg('input') settingInput: SettingInput,
     @Ctx() ctx: MyContext,
   ): Promise<Setting> {
-    const { id, sound, money, rate, complexity } = settingInput;
+    const { id, sound, music, volume, money, rate, balance, games, complexity } = settingInput;
     const setting = await SettingModel.findOneAndUpdate(
       { _id: id, user: ctx.res.locals.userId },
-      { sound, money, rate, complexity },
+      { sound, music, volume, money, rate, balance, games, complexity },
       { runValidators: true, new: true },
     );
     if (!setting) {

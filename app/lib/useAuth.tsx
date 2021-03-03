@@ -47,7 +47,6 @@ function useProvideAuth() {
         sessionStorage.setItem('token', data.login.token);
         client.resetStore().then(() => {
           setMessage('Success login!');
-          console.log(data);
           router.push(`/game/${data.login.user._id}`);
         });
       } else {
