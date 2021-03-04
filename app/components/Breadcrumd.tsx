@@ -8,7 +8,9 @@ export default function BreadcrumbItem({ user }) {
       <ol className="list-none p-0 m-0 inline-flex text-gray-500 dark:text-gray-100">
         <li className="flex items-center">
           <Link href="/">
-            <a className="shadow__item hover__item text-gray-500 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100">
+            <a
+              className="shadow__item hover__item text-gray-500 hover:text-orange-600 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100"
+              aria-current="page">
               Home
             </a>
           </Link>
@@ -21,7 +23,9 @@ export default function BreadcrumbItem({ user }) {
         </li>
         <li className="flex items-center">
           <Link href="/rules">
-            <a className="shadow__item hover__item text-gray-500 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100">
+            <a
+              className="shadow__item hover__item hover:text-orange-600 text-gray-500 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100"
+              aria-current="page">
               Rules
             </a>
           </Link>
@@ -38,7 +42,7 @@ export default function BreadcrumbItem({ user }) {
           <li>
             <Link href={`/game/${user._id}`}>
               <a
-                className="shadow__item hover__item text-gray-500 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100"
+                className="shadow__item hover__item hover:text-orange-600 text-gray-500 focus:text-orange-600 dark:focus:text-pink-500 dark:text-gray-100"
                 aria-current="page">
                 Game
               </a>

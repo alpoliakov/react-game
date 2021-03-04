@@ -6,19 +6,25 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
 
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { initializeApollo } from '../lib/apollo';
 import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
 import { SettingDocument } from '../lib/graphql/setting.graphql';
 import { useAuth } from '../lib/useAuth';
-import Audio from './Audio';
 import Card from './Card';
-import Player from './Player';
 import SoundState from './SoundState';
 
 export default function GameField({ id }) {
   const [editSetting] = useEditSettingMutation();
   const { user } = useAuth();
   const router = useRouter();
+
+  const keyB = ['b'];
+  const keyC = ['c'];
+  const keyH = ['h'];
+  const keyS = ['s'];
+  const keyM = ['m'];
+  const keyP = ['p'];
 
   const [form] = Form.useForm();
 
@@ -483,6 +489,70 @@ export default function GameField({ id }) {
     },
   };
 
+  useKeyboardShortcut(
+    keyB,
+    () => {
+      if (!currentBet) {
+        setBet();
+      }
+    },
+    { overrideSystem: false },
+  );
+
+  useKeyboardShortcut(
+    keyC,
+    () => {
+      if (gameOver) {
+        continueGame();
+      }
+    },
+    { overrideSystem: false },
+  );
+
+  useKeyboardShortcut(
+    keyH,
+    () => {
+      if (!gameOver && currentBet) {
+        hit();
+      }
+    },
+    { overrideSystem: false },
+  );
+
+  useKeyboardShortcut(
+    keyS,
+    () => {
+      if (!gameOver && currentBet) {
+        stand();
+      }
+    },
+    { overrideSystem: false },
+  );
+
+  useKeyboardShortcut(
+    keyM,
+    () => {
+      if (!user) {
+        return;
+      }
+
+      router.push('/settings');
+    },
+    { overrideSystem: false },
+  );
+
+  useKeyboardShortcut(
+    keyP,
+    () => {
+      if (!user) {
+        return;
+      }
+
+      router.push(`/user/${user._id}`);
+    },
+    { overrideSystem: false },
+  );
+
   return (
     <motion.div
       initial="initial"
@@ -494,9 +564,12 @@ export default function GameField({ id }) {
       <ModalItem />
       <div className="relative px-4 sm:px-6 lg:px-8">
         <div className="text-lg max-w-screen-xl mx-auto container">
-          <Tooltip title={full ? 'Full screen mode off' : 'Full screen mode on'} color="geekblue">
+          <Tooltip
+            placement="topLeft"
+            title={full ? 'Full screen mode off' : 'Full screen mode on'}
+            color="geekblue">
             <button
-              className="absolute border-none outline-none focus:outline-none transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+              className="absolute border-none outline-none focus:outline-none hover:text-orange-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
               onClick={toggleFullScreen}>
               {full ? (
                 <FullscreenExitOutlined style={{ fontSize: 28 }} />
@@ -505,10 +578,7 @@ export default function GameField({ id }) {
               )}
             </button>
           </Tooltip>
-          <SoundState sound={sound} volume={volume} />
-          <div className="absolute top-40">
-            <Audio />
-          </div>
+          <SoundState sound={sound} music={music} volume={volume} />
           <div className="title">
             <span className="mt-2 mb-4 block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
               {`Wallet: $ ${money}`}

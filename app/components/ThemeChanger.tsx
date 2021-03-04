@@ -1,18 +1,51 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useAuth } from '../lib/useAuth';
 import BreadcrumbItem from './Breadcrumd';
 import Dropdown from './Dropdown';
 
 const ThemeChanger = () => {
   const [mounted, setMounted] = useState(false);
+  const keysLight = ['Shift', 'L'];
+  const keysDark = ['Shift', 'D'];
+  const keysQuit = ['Shift', 'Q'];
+  const keyGame = ['g'];
+
+  const router = useRouter();
 
   const { theme, setTheme } = useTheme();
   const { message, error, user, signOut } = useAuth();
+
+  useKeyboardShortcut(keysLight, () => setTheme('light'), {
+    overrideSystem: false,
+  });
+
+  useKeyboardShortcut(keysDark, () => setTheme('dark'), {
+    overrideSystem: false,
+  });
+
+  useKeyboardShortcut(keysQuit, () => signOut(), {
+    overrideSystem: false,
+  });
+
+  useKeyboardShortcut(
+    keyGame,
+    () => {
+      if (!user) {
+        return;
+      }
+
+      router.push(`/game/${user._id}`);
+    },
+    {
+      overrideSystem: false,
+    },
+  );
 
   useEffect(() => setMounted(true), []);
 
@@ -48,7 +81,9 @@ const ThemeChanger = () => {
           </span>
         )}
         <Dropdown />
-        <button onClick={() => setTheme('light')} className="hover:text-orange-600">
+        <button
+          onClick={() => setTheme('light')}
+          className="border-none outline-none focus:outline-none hover:text-orange-600">
           <svg
             className="w-8 h-8"
             fill="none"
@@ -63,7 +98,9 @@ const ThemeChanger = () => {
             />
           </svg>
         </button>
-        <button onClick={() => setTheme('dark')} className="ml-4 hover:text-orange-600">
+        <button
+          onClick={() => setTheme('dark')}
+          className="ml-4 border-none outline-none focus:outline-none hover:text-orange-600">
           <svg
             fill="none"
             viewBox="0 0 24 24"

@@ -43,25 +43,19 @@ const Login = (
 );
 
 const SignUp = (
-  <p
-    style={{ marginTop: '0 !important' }}
-    className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
+  <p className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
     Sign Up!
   </p>
 );
 
 const Settings = (
-  <p
-    style={{ marginTop: '0 !important' }}
-    className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
+  <p className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
     Settings!
   </p>
 );
 
 const Game = (
-  <p
-    style={{ marginTop: '0 !important' }}
-    className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
+  <p className="shadow__item text-2xl hover__item text-gray-500 hover:text-orange-600 dark:hover:text-pink-500 dark:text-gray-100">
     Game!
   </p>
 );

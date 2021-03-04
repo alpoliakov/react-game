@@ -4,7 +4,6 @@ import useSound from 'use-sound';
 const Play = ({ play }) => {
   return (
     <>
-      <span className="text-sm">Music Off</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="38"
@@ -32,7 +31,6 @@ const Play = ({ play }) => {
 const Pause = ({ stop }) => {
   return (
     <>
-      <span className="text-sm">Music On</span>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="40"

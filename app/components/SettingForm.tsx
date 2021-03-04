@@ -58,7 +58,6 @@ export default function SettingForm(props: Props) {
   }, [state]);
 
   const onFinish = async (values) => {
-    console.log(values);
     try {
       const { data } = await editSetting({
         variables: {
@@ -76,10 +75,6 @@ export default function SettingForm(props: Props) {
 
   function onChangeValue(value) {
     setState({ ...state, volume: value });
-  }
-
-  function onAfterChangeValue(value) {
-    console.log('onAfterChange: ', value);
   }
 
   return (
@@ -113,7 +108,7 @@ export default function SettingForm(props: Props) {
               style={{ display: 'inline-block' }}
               name="money"
               label={<span className="text-gray-900 dark:text-gray-100">Wallet</span>}
-              rules={[{ required: true, type: 'number', min: 100, max: 5000 }]}>
+              rules={[{ required: true, type: 'number', min: 100, max: 50000 }]}>
               <InputNumber name="money" onChange={(data) => setState({ ...state, money: data })} />
             </Form.Item>
             <Form.Item
@@ -159,7 +154,7 @@ export default function SettingForm(props: Props) {
           <Form.Item
             name="volume"
             label={<span className="text-gray-900 dark:text-gray-100">Volume</span>}>
-            <Slider disabled={!sound} onChange={onChangeValue} onAfterChange={onAfterChangeValue} />
+            <Slider disabled={!sound} onChange={onChangeValue} />
           </Form.Item>
           <Button type="primary" htmlType="submit" block>
             Save changes
