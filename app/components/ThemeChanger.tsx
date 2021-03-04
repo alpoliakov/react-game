@@ -13,34 +13,6 @@ const ThemeChanger = () => {
 
   const { theme, setTheme } = useTheme();
   const { message, error, user, signOut } = useAuth();
-  const router = useRouter();
-
-  function hotKeys(event) {
-    const { key } = event;
-
-    if (!user) return;
-
-    if (key.toLowerCase() === 'h' && user) {
-      router.push('/');
-      console.log('Hello');
-    }
-
-    if (key.toLowerCase() === 'r' && user) {
-      router.push('/rules');
-    }
-
-    if (key.toLowerCase() === 'd' && user) {
-      setTheme('dark');
-    }
-
-    if (key.toLowerCase() === 'l' && user) {
-      setTheme('light');
-    }
-
-    if (key.toLowerCase() === 'e' && user) {
-      signOut();
-    }
-  }
 
   useEffect(() => setMounted(true), []);
 
@@ -48,8 +20,8 @@ const ThemeChanger = () => {
     if (message) {
       toast.success(message, { duration: 6000 });
 
-      const { body } = document;
-      body.addEventListener('keydown', hotKeys);
+      // const { body } = document;
+      // body.addEventListener('keydown', hotKeys);
     }
   }, [message]);
 

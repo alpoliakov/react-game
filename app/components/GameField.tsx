@@ -10,7 +10,10 @@ import { initializeApollo } from '../lib/apollo';
 import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
 import { SettingDocument } from '../lib/graphql/setting.graphql';
 import { useAuth } from '../lib/useAuth';
+import Audio from './Audio';
 import Card from './Card';
+import Player from './Player';
+import SoundState from './SoundState';
 
 export default function GameField({ id }) {
   const [editSetting] = useEditSettingMutation();
@@ -194,9 +197,6 @@ export default function GameField({ id }) {
   const [playEqual] = useSound('../static/sounds/popping.mp3', {
     volume: volume / 100,
   });
-  const [playMusic, { stop }] = useSound('../static/sounds/duck-souce.mp3', {
-    volume: volume / 100,
-  });
 
   const audioEffects = (type) => {
     if (!sound) {
@@ -236,7 +236,7 @@ export default function GameField({ id }) {
     }
 
     setState({ ...state, money: newMoney, currentBet: true });
-    playBet();
+    if (sound) playBet();
   };
 
   const hit = () => {
@@ -407,16 +407,6 @@ export default function GameField({ id }) {
     setGamesCount();
   }, [gameOver]);
 
-  useEffect(() => {
-    stop();
-    console.log('Stop');
-    if (music) {
-      playMusic();
-      console.log('Play');
-    }
-    return;
-  }, [music]);
-
   const handleCancel = () => {
     setVisibleModal(false);
     router.push('/');
@@ -515,6 +505,10 @@ export default function GameField({ id }) {
               )}
             </button>
           </Tooltip>
+          <SoundState sound={sound} volume={volume} />
+          <div className="absolute top-40">
+            <Audio />
+          </div>
           <div className="title">
             <span className="mt-2 mb-4 block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
               {`Wallet: $ ${money}`}

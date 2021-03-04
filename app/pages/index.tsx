@@ -1,7 +1,5 @@
-import { Button } from 'antd';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
 
 import HoverLink from '../components/HoverLink';

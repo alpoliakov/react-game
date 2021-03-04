@@ -12,14 +12,13 @@ const ARROW_DELAY = 125;
 export default function HoverLink({ text, path }) {
   const [isHovering, setIsHovering] = React.useState(false);
   const { push } = useRouter();
-  const poppingSound = '../static/sounds/pop.mp3';
-  const [play, { stop }] = useSound(poppingSound);
+  const [playPop, { stop }] = useSound('../static/sounds/pop.mp3');
 
   return (
     <Button
       onMouseEnter={() => {
         setIsHovering(true);
-        play();
+        playPop();
       }}
       onMouseLeave={() => {
         setIsHovering(false);

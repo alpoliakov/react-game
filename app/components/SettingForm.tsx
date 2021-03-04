@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import useSound from 'use-sound';
 
 import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
 import { Setting } from '../lib/graphql/settings.graphql';
@@ -18,6 +19,7 @@ export default function SettingForm(props: Props) {
   const [editSetting] = useEditSettingMutation();
   const [form] = Form.useForm();
   const router = useRouter();
+  const [play, { stop }] = useSound('../static/sounds/duck-souce.mp3');
 
   const { user } = useAuth();
 
@@ -73,7 +75,6 @@ export default function SettingForm(props: Props) {
   };
 
   function onChangeValue(value) {
-    console.log('onChange: ', value);
     setState({ ...state, volume: value });
   }
 
