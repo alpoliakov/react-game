@@ -8,8 +8,15 @@
   "scripts": {
     "test": "lint-staged",
     "lint": "eslint --fix .",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "build": "yarn workspace @react-game/app run build",
+    "start": "yarn workspace @react-game/api run start",
+    "dev": "yarn workspace @react-game/api run dev"
   },
+  "workspaces": [
+    "api",
+    "app"
+  ],
   "lint-staged": {
     "./**/*.{js,jsx,ts,tsx}": [
       "eslint --cache --fix"

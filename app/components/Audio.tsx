@@ -47,7 +47,7 @@ const Pause = ({ stop }) => {
 };
 
 const Audio = () => {
-  const [play, { stop, isPlaying }] = useSound('../static/sounds/duck-souce.mp3');
+  const [play, { stop, isPlaying }] = useSound('/sounds/duck-sauce.mp3');
 
   useEffect(() => {
     return () => {

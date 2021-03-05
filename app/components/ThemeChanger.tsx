@@ -52,9 +52,6 @@ const ThemeChanger = () => {
   useEffect(() => {
     if (message) {
       toast.success(message, { duration: 6000 });
-
-      // const { body } = document;
-      // body.addEventListener('keydown', hotKeys);
     }
   }, [message]);
 

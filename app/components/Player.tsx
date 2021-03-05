@@ -6,7 +6,7 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 const Pause = ({ stop }) => {
   return (
     <svg
-      className="button cursor-pointer hover:text-orange-600"
+      className="button shadow__item hover__item cursor-pointer hover:text-orange-600"
       fill="currentColor"
       stroke="currentColor"
       viewBox="0 0 70 70"
@@ -20,7 +20,7 @@ const Pause = ({ stop }) => {
 const Play = ({ play, stateMusic }) => {
   return (
     <svg
-      className="button cursor-pointer hover:text-orange-600"
+      className="button shadow__item hover__item cursor-pointer hover:text-orange-600"
       viewBox="0 0 70 70"
       fill="currentColor"
       stroke="currentColor"

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import useSound from 'use-sound';
 
@@ -10,9 +10,9 @@ const PRIMARY = 'hsl(240deg, 85%, 55%)';
 const ARROW_DELAY = 125;
 
 export default function HoverLink({ text, path }) {
-  const [isHovering, setIsHovering] = React.useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const { push } = useRouter();
-  const [playPop, { stop }] = useSound('../static/sounds/pop.mp3');
+  const [playPop, { stop }] = useSound('/sounds/pop.mp3');
 
   return (
     <Button
@@ -89,7 +89,7 @@ const Button = styled(UnstyledButton)`
   display: inline-flex;
   align-items: center;
   font-size: 18px;
-  margin-top: 0;
+  margin-top: 30px;
   color: var(--color-text);
   font-weight: var(--font-weight-bold);
 `;

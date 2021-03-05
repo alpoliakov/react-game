@@ -120,7 +120,7 @@ export default function Home() {
           <motion.div
             variants={backVariants}
             style={{ width: 470 }}
-            className="flex my-0 mx-auto justify-around">
+            className="flex mt-0 mx-auto justify-around">
             {!user && (
               <>
                 <HoverLink text={Login} path={'/auth/signin'} />

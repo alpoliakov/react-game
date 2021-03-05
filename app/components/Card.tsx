@@ -30,7 +30,7 @@ export default function Card({ number, suit }) {
   return (
     <td>
       <div
-        className={`${color} bg-gray-300 dark:bg-gray-200 inset-0 transform hover:scale-150 transition duration-300`}>
+        className={`${color} shadow__item hover__item bg-gray-300 dark:bg-gray-200 inset-0 transform hover:scale-150 transition duration-300`}>
         {combo}
       </div>
     </td>

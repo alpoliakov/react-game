@@ -19,7 +19,6 @@ export default function SettingForm(props: Props) {
   const [editSetting] = useEditSettingMutation();
   const [form] = Form.useForm();
   const router = useRouter();
-  const [play, { stop }] = useSound('../static/sounds/duck-souce.mp3');
 
   const { user } = useAuth();
 

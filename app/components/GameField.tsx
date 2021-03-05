@@ -31,6 +31,8 @@ export default function GameField({ id }) {
   const [visibleModal, setVisibleModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [full, setFull] = useState(false);
+  const [autoplay, setAutoplay] = useState(false);
+  const [count, setCount] = useState(0);
 
   const showModal = () => {
     setVisibleModal(true);
@@ -185,22 +187,22 @@ export default function GameField({ id }) {
     }
   };
 
-  const [playError] = useSound('../static/sounds/error.mp3', {
+  const [playError] = useSound('/sounds/error.mp3', {
     volume: volume / 100,
   });
-  const [playButton] = useSound('../static/sounds/button.mp3', {
+  const [playButton] = useSound('/sounds/button.mp3', {
     volume: volume / 100,
   });
-  const [playBet] = useSound('../static/sounds/bet.mp3', {
+  const [playBet] = useSound('/sounds/bet.mp3', {
     volume: volume / 100,
   });
-  const [playWin] = useSound('../static/sounds/winAudio.mp3', {
+  const [playWin] = useSound('/sounds/winAudio.mp3', {
     volume: volume / 100,
   });
-  const [playFail] = useSound('../static/sounds/fail.mp3', {
+  const [playFail] = useSound('/sounds/fail.mp3', {
     volume: volume / 100,
   });
-  const [playEqual] = useSound('../static/sounds/popping.mp3', {
+  const [playEqual] = useSound('/sounds/popping.mp3', {
     volume: volume / 100,
   });
 
@@ -229,6 +231,7 @@ export default function GameField({ id }) {
 
     if (+money <= 0) {
       setState({ ...state, message: 'Game over! Please start a new game.' });
+      setAutoplay(false);
 
       setTimeout(() => {
         audioEffects('fail');
@@ -276,6 +279,7 @@ export default function GameField({ id }) {
       }
     } else {
       setState({ ...state, message: 'Game over! Please start a new game.' });
+      setAutoplay(false);
       showModal();
       audioEffects('fail');
     }
@@ -364,6 +368,7 @@ export default function GameField({ id }) {
       }
     } else {
       setState({ ...state, message: 'Game over! Please start a new game.' });
+      setAutoplay(false);
       showModal();
       setTimeout(() => {
         audioEffects('fail');
@@ -391,6 +396,7 @@ export default function GameField({ id }) {
       }
     } else {
       setState({ ...state, message: 'Game over! You are broke! Please start a new game.' });
+      setAutoplay(false);
       setTimeout(() => {
         showModal();
       }, 1000);
@@ -553,6 +559,59 @@ export default function GameField({ id }) {
     { overrideSystem: false },
   );
 
+  useEffect(() => {
+    if (!autoplay) {
+      return;
+    }
+
+    executeAutoplay();
+  }, [autoplay, gameOver, currentBet]);
+
+  const handleAutoplay = async () => {
+    setAutoplay(!autoplay);
+    setCount(0);
+    await toast.success('Autoplay run!');
+  };
+
+  async function executeAutoplay() {
+    const delay = 3500;
+
+    if (!autoplay || count === 35) {
+      setAutoplay(false);
+      toast.success('Autoplay off!');
+      return;
+    }
+
+    if (gameOver) {
+      setTimeout(() => {
+        continueGame();
+      }, delay);
+    }
+
+    if (!currentBet && !gameOver) {
+      if (rate > money) {
+        setState({ ...state, rate: money, money: money - rate });
+      }
+
+      setTimeout(() => {
+        setBet();
+      }, delay);
+      setCount((count += 1));
+    }
+
+    if (!gameOver && currentBet) {
+      while (player.count < 17) {
+        hit();
+      }
+
+      if (player.count < 22) {
+        setTimeout(() => {
+          stand();
+        }, delay);
+      }
+    }
+  }
+
   return (
     <motion.div
       initial="initial"
@@ -563,13 +622,22 @@ export default function GameField({ id }) {
       className="relative py-5">
       <ModalItem />
       <div className="relative px-4 sm:px-6 lg:px-8">
-        <div className="text-lg max-w-screen-xl mx-auto container">
+        <div className="text-lg max-w-screen-xl mx-auto container relative">
+          <button
+            disabled={+money <= 0}
+            className="absolute text-lg shadow__item hover__item right-0 border-none outline-none focus:outline-none hover:text-orange-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+            onClick={handleAutoplay}>
+            {autoplay ? 'Autoplay On' : 'Autoplay Off'}
+          </button>
+          {autoplay && (
+            <span className="absolute top-10 right-0 shadow__item text-sm">Games: {count}</span>
+          )}
           <Tooltip
             placement="topLeft"
             title={full ? 'Full screen mode off' : 'Full screen mode on'}
             color="geekblue">
             <button
-              className="absolute border-none outline-none focus:outline-none hover:text-orange-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+              className="absolute shadow__item hover__item border-none outline-none focus:outline-none hover:text-orange-600 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
               onClick={toggleFullScreen}>
               {full ? (
                 <FullscreenExitOutlined style={{ fontSize: 28 }} />
@@ -580,7 +648,7 @@ export default function GameField({ id }) {
           </Tooltip>
           <SoundState sound={sound} music={music} volume={volume} />
           <div className="title">
-            <span className="mt-2 mb-4 block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+            <span className="mt-2 mb-4 shadow__item block text-2xl md:text-3xl text-center leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
               {`Wallet: $ ${money}`}
             </span>
             <span
@@ -602,7 +670,7 @@ export default function GameField({ id }) {
                 className="flex align-center justify-center">
                 <Form.Item
                   name="rate"
-                  className="flex flex-none"
+                  className="flex flex-none shadow__item hover__item"
                   rules={[{ required: true, type: 'number', min: 10, max: 5000 }]}>
                   <InputNumber
                     name="rate"
@@ -616,7 +684,7 @@ export default function GameField({ id }) {
                     htmlType="submit"
                     className={`${
                       gameOver ? '' : 'animate-pulse'
-                    } ml-3 transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}>
+                    } ml-3 transition shadow__item hover__item duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110`}>
                     Place Bet
                   </Button>
                 </Form.Item>
@@ -626,7 +694,7 @@ export default function GameField({ id }) {
               style={{ width: '470px' }}
               className="mx-auto grid grid-flow-col grid-cols-3 gap-3">
               <Button
-                className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+                className="transition shadow__item hover__item duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
                 type="primary"
                 onClick={continueGame}
                 disabled={!gameOver}
@@ -634,7 +702,7 @@ export default function GameField({ id }) {
                 Continue
               </Button>
               <Button
-                className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+                className="shadow__item hover__item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
                 type="primary"
                 ghost
                 onClick={hit}
@@ -642,7 +710,7 @@ export default function GameField({ id }) {
                 Hit
               </Button>
               <Button
-                className="transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
+                className="shadow__item hover__item transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-110"
                 type="primary"
                 ghost
                 onClick={stand}

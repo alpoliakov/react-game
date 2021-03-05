@@ -1,4 +1,5 @@
 const colors = require(`tailwindcss/colors`);
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
   purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
@@ -7,6 +8,9 @@ module.exports = {
     extend: {
       colors: {
         orange: colors.orange,
+      },
+      fontFamily: {
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
       },
       typography: (theme) => ({
         DEFAULT: {
@@ -36,6 +40,7 @@ module.exports = {
   },
   variants: {
     typography: ['dark'],
+    extend: {},
   },
   plugins: [require('@tailwindcss/typography')],
 };

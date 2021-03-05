@@ -21,7 +21,7 @@ export default function SoundState({ sound, music, volume }) {
     updateState();
   }, [sound, music, volume]);
 
-  const [playMusic, { stop, isPlaying }] = useSound('../static/sounds/duck-souce.mp3', {
+  const [playMusic, { stop, isPlaying }] = useSound('/sounds/duck_sauce.mp3', {
     volume: stateVolume / 100,
   });
 
@@ -35,9 +35,11 @@ export default function SoundState({ sound, music, volume }) {
 
   return (
     <div className="absolute flex flex-col top-8 md:top-12" ref={audio}>
-      <span className="text-sm">Sound {soundMsg}</span>
-      <span className="text-sm">Volume: {stateSound || stateMusic ? stateVolume : 'Off'}</span>
-      <span className="text-sm">Music {musicMsg}</span>
+      <span className="text-sm shadow__item">Sound {soundMsg}</span>
+      <span className="text-sm shadow__item">
+        Volume: {stateSound || stateMusic ? stateVolume : 'Off'}
+      </span>
+      <span className="text-sm shadow__item">Music {musicMsg}</span>
       <Player play={playMusic} stop={stop} isPlaying={isPlaying} stateMusic={stateMusic} />
     </div>
   );
