@@ -1,0 +1,13 @@
+query Settings {
+  settings {
+    _id
+    sound
+    music
+    volume
+    money
+    rate
+    balance
+    games
+    complexity
+  }
+}

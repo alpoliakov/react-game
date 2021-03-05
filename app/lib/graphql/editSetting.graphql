@@ -1,0 +1,13 @@
+mutation EditSetting($input: SettingInput!) {
+  editSetting(input: $input) {
+    _id
+    sound
+    music
+    volume
+    money
+    rate
+    balance
+    games
+    complexity
+  }
+}

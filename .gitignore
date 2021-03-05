@@ -1,0 +1,39 @@
+### Node template
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# Dependency directories
+node_modules
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Next.js build output
+.next
+
+### macOS template
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+.idea
+*.graphql.d.ts
+*.graphqls.d.ts
+__generated__
+# vercel
+.vercel
+
+.eslintcache
