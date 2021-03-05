@@ -1,5 +1,11 @@
-import { CheckOutlined, CloseOutlined, HomeOutlined, RollbackOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Form, InputNumber, Slider, Switch, Tooltip } from 'antd';
+import {
+  CheckOutlined,
+  CloseOutlined,
+  HomeOutlined,
+  RollbackOutlined,
+  UnorderedListOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Divider, Form, InputNumber, Popover, Slider, Switch, Tooltip } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -75,6 +81,22 @@ export default function SettingForm(props: Props) {
     setState({ ...state, volume: value });
   }
 
+  const content = (
+    <>
+      <p>Shift + Q - quick exit</p>
+      <p>Shift + L - light theme</p>
+      <p>Shift + D - dark theme</p>
+      <p>b - make bet</p>
+      <p>c - continue the game</p>
+      <p>h - take a card</p>
+      <p>s - stand</p>
+      <p>m - go to settings</p>
+      <p>p - go to profile</p>
+      <p>g - return to game</p>
+      <p>w - on/off music</p>
+    </>
+  );
+
   return (
     <Card
       style={{ width: 400 }}
@@ -89,6 +111,9 @@ export default function SettingForm(props: Props) {
         <Tooltip key="back" title="Return">
           <RollbackOutlined style={{ fontSize: '20px' }} onClick={() => router.back()} />
         </Tooltip>,
+        <Popover key="list" title="Hot keys list" content={content} trigger="click">
+          <UnorderedListOutlined style={{ fontSize: '20px' }} />
+        </Popover>,
       ]}>
       <h1 className="block text-base text-center text-orange-600 dark:text-pink-500 font-semibold tracking-wide uppercase">
         Game settings
