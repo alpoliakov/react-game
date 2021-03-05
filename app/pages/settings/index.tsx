@@ -30,7 +30,7 @@ export default function Settings() {
   }, []);
 
   return (
-    <div style={{ minHeight: '83vh' }} className="flex justify-center items-center">
+    <div style={{ minHeight: '84vh' }} className="flex justify-center items-center">
       <Head>
         <title>Settings</title>
       </Head>

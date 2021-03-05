@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import React, { useCallback, useEffect, useState } from 'react';

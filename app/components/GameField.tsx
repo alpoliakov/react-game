@@ -32,7 +32,6 @@ export default function GameField({ id }) {
   const [loading, setLoading] = useState(false);
   const [full, setFull] = useState(false);
   const [autoplay, setAutoplay] = useState(false);
-  // tslint:disable
   let [count, setCount] = useState(0);
 
   const showModal = () => {

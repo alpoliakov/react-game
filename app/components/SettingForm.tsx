@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import useSound from 'use-sound';
 
 import { useEditSettingMutation } from '../lib/graphql/editSetting.graphql';
 import { Setting } from '../lib/graphql/settings.graphql';

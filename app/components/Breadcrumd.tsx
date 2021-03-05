@@ -1,4 +1,3 @@
-import { FullscreenExitOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import React from 'react';
 

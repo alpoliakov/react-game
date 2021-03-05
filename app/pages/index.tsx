@@ -64,7 +64,7 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <div style={{ minHeight: '83vh' }} className="relative py-5 flex justify-center items-center">
+    <div style={{ minHeight: '84vh' }} className="relative py-5 flex justify-center items-center">
       <Head>
         <title>Home Page</title>
       </Head>
